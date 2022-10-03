@@ -1,0 +1,32 @@
+import java.text.SimpleDateFormat
+
+
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow'
+}
+
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+
+dependencies {
+    implementation 'com.google.guava:guava'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+shadowJar {
+    archiveBaseName.set('gradleHelloOtus')
+    archiveVersion.set(new SimpleDateFormat("yy-MM-dd").format(new Date()))
+    archiveClassifier.set('')
+    manifest {
+        attributes 'Main-Class': 'ru.otus.HelloOtus'
+    }
+}
+
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.build.dependsOn tasks.shadowJar
