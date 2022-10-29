@@ -1,4 +1,4 @@
-package homework.src.main.java.ru.calculator;
+package homework;
 
 
 /*

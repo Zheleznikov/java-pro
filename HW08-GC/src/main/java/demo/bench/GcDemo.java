@@ -1,4 +1,4 @@
-package demo.src.main.java.ru.otus.gc.bench;
+package demo.bench;
 
 import com.sun.management.GarbageCollectionNotificationInfo;
 

@@ -1,4 +1,4 @@
-package homework.src.main.java.ru.calculator;
+package homework;
 
 import java.util.ArrayList;
 import java.util.List;
