@@ -21,9 +21,7 @@ class Ioc {
     static class DemoInvocationHandler implements InvocationHandler {
 
         private final TestLoggingInterface myClass;
-        private List<Method> methodsWithAnnotationLog = new ArrayList<>();
-        private List<String> methodsWithAnnotationLogName = new ArrayList<>();
-        private List<String> methodsWithAnnotationLogParameterTypes = new ArrayList<>();
+        private List<Method> methodsWithAnnotationLog = new ArrayList<>(); // не знаю, как объявить стрим и в него присвоить результат метода getMethodsWithAnnotationLog
 
         DemoInvocationHandler(TestLoggingInterface myClass) {
             this.myClass = myClass;
@@ -32,22 +30,17 @@ class Ioc {
 
         private void getMethodsWithAnnotationLog() {
             methodsWithAnnotationLog = Arrays.stream(myClass.getClass().getDeclaredMethods())
-                    .filter(method -> method.isAnnotationPresent(Log.class)).toList();
-            if (methodsWithAnnotationLog.size() > 0) {
-                methodsWithAnnotationLogName = methodsWithAnnotationLog.stream().map(Method::getName).toList();
-                methodsWithAnnotationLogParameterTypes = methodsWithAnnotationLog.stream().map(method -> Arrays.toString(method.getParameters())).toList();
-            }
-
+                    .filter(method -> method.isAnnotationPresent(Log.class)).toList(); // приходится приводить к списку
         }
 
-        private boolean isMethodAnnotated(Method method) {
-            return methodsWithAnnotationLogName.contains(method.getName())
-                    && methodsWithAnnotationLogParameterTypes.contains(Arrays.toString(method.getParameters()));
+        private boolean isMethodMatches(Method method) {
+            return methodsWithAnnotationLog.stream().anyMatch(currentMethod -> currentMethod.getName().equals(method.getName()) // а здесь приходится приводить к стриму обратно
+                    && Arrays.equals(currentMethod.getParameterTypes(), method.getParameterTypes()));
         }
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            if (isMethodAnnotated(method)) {
+            if (isMethodMatches(method)) {
                 System.out.println("\n=== Start AOP logging ===");
                 System.out.println("method executed: " + method.getName());
                 System.out.println("params: " + Arrays.toString(args));
