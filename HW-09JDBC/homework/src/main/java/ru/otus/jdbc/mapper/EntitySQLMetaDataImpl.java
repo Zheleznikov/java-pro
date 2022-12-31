@@ -16,7 +16,7 @@ public class EntitySQLMetaDataImpl implements EntitySQLMetaData {
     private final String updateSql;
 
 
-    public EntitySQLMetaDataImpl(EntityClassMetaData entityClassMetaData) {
+    public EntitySQLMetaDataImpl(EntityClassMetaData<?> entityClassMetaData) {
 
         this.fieldsWithoutId = entityClassMetaData.getFieldsWithoutId();
         this.idField = entityClassMetaData.getIdField().getName();
@@ -26,7 +26,6 @@ public class EntitySQLMetaDataImpl implements EntitySQLMetaData {
         this.selectByIdSql = createSelectByIdSql();
         this.insertSql = createInsertSql();
         this.updateSql = createUpdateSql();
-        System.out.println(updateSql);
     }
 
     private String createSelectAllSql() {
