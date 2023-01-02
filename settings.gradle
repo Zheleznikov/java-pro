@@ -5,4 +5,6 @@ include 'HW08-GC'
 include 'HW10-AOP'
 
 include 'L18-jdbc:homework'
+include 'HW10-jpql'
+
 
