@@ -86,7 +86,7 @@ public class UsersWebServerSimple implements UsersWebServer {
         servletContextHandler.addServlet(new ServletHolder(new UsersApiServlet(userDao, gson)), "/api/user/*");
 
         servletContextHandler.addServlet(new ServletHolder(new ClientApiServlet(clientDao, gson)), "/api/client");
-        servletContextHandler.addServlet(new ServletHolder(new ClientsServlet(templateProcessor, clientDao)), "/clients");
+        servletContextHandler.addServlet(new ServletHolder(new ClientsServlet(templateProcessor)), "/clients");
 
         return servletContextHandler;
     }
