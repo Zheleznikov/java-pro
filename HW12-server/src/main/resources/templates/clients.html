@@ -1,0 +1,103 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Клиенты</title>
+    <script>
+
+        function getAllClients() {
+            const tableBody = document.getElementById('tableBody');
+            const mainTable = document.getElementById('mainTable');
+            mainTable.style.visibility = 'visible';
+            tableBody.innerHTML = '';
+
+            fetch('api/client')
+                .then(rs => rs.json())
+                .then(clients => {
+                    clients.forEach(client => {
+                        console.log(client);
+
+                        const tdId = document.createElement('td');
+                        tdId.innerHTML = client.id;
+                        const tdName = document.createElement('td');
+                        tdName.innerHTML = client.name;
+                        const tdAddress = document.createElement('td');
+                        tdAddress.innerHTML = client.address;
+                        const tdPhone = document.createElement('td');
+                        tdPhone.innerHTML = client.phones;
+
+                        const tr = document.createElement('tr');
+                        tr.appendChild(tdId);
+                        tr.appendChild(tdName);
+                        tr.appendChild(tdAddress);
+                        tr.appendChild(tdPhone);
+                        tableBody.appendChild(tr);
+
+                    })
+                    clientList.setAttribute('filled', true);
+                })
+        }
+
+        function createClient(event) {
+            event.preventDefault();
+
+            const nameInput = document.getElementById('nameInput');
+            const streetInput = document.getElementById('streetInput');
+            const phoneInput = document.getElementById('phoneInput');
+            const createdInfo = document.getElementById('createdInfo');
+
+            fetch('api/client', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': '*/*',
+                    },
+                    body: JSON.stringify({
+                        "name": nameInput.value,
+                        "phone": phoneInput.value,
+                        "street": streetInput.value,
+                    })
+                })
+                .then(res => {
+                    createdInfo.innerHTML = 'Клиент успешно добавлен';
+                    if (document.getElementById('clientList').getAttribute('filled')) {
+                        getAllClients();
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    createdInfo.innerHTML = 'Чет не получилось (';
+                  });
+        }
+
+    </script>
+</head>
+<body>
+<h4>Добавить клиента</h4>
+<form onsubmit="createClient(event)">
+    <input type="text" id="nameInput" placeholder="Введите имя" required>
+    <input type="text" id="streetInput" placeholder="Введите улицу">
+    <input type="text" id="phoneInput" placeholder="Введите телефон">
+    <input type="submit" placeholder="Добавить">
+</form>
+<p id="createdInfo"></p>
+<h4>Получить всех клиентов</h4>
+<button onclick="getAllClients()">Получить</button>
+<div id="clientList"> </div>
+<pre id="userDataContainer"></pre>
+
+<table id="mainTable" style="width: 400px; visibility: hidden">
+    <thead>
+    <tr>
+        <td style="width: 50px">Id</td>
+        <td style="width: 100px">Имя</td>
+        <td style="width: 100px">Адрес</td>
+        <td style="width: 100px">Телефоны</td>
+    </tr>
+    </thead>
+    <tbody id="tableBody">
+
+    </tbody>
+</table>
+
+
+</body>
+</html>
