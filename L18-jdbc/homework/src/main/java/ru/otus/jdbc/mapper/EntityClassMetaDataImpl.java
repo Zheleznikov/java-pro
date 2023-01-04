@@ -1,7 +1,7 @@
 package ru.otus.jdbc.mapper;
 
 import ru.otus.annotation.Id;
-import ru.otus.core.repository.DataTemplateException;
+import ru.otus.core.hibernate.repository.DataTemplateException;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

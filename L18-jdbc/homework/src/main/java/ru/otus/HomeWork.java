@@ -3,8 +3,8 @@ package ru.otus;
 import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.core.repository.executor.DbExecutorImpl;
-import ru.otus.core.sessionmanager.TransactionRunnerJdbc;
+import ru.otus.core.hibernate.repository.executor.DbExecutorImpl;
+import ru.otus.core.hibernate.sessionmanager.TransactionRunnerJdbc;
 import ru.otus.crm.datasource.DriverManagerDataSource;
 import ru.otus.crm.model.Client;
 import ru.otus.crm.model.Manager;
@@ -14,7 +14,6 @@ import ru.otus.jdbc.mapper.*;
 
 import javax.sql.DataSource;
 import java.util.List;
-import java.util.Optional;
 
 public class HomeWork {
     private static final String URL = "jdbc:postgresql://localhost:5430/demoDB";

@@ -1,16 +1,17 @@
-package ru.otus.demo;
+package ru.otus.core.hibernate;
 
 import org.hibernate.cfg.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.core.hibernate.dbmigrations.MigrationsExecutorFlyway;
 import ru.otus.core.hibernate.repository.DataTemplateHibernate;
 import ru.otus.core.hibernate.repository.HibernateUtils;
 import ru.otus.core.hibernate.sessionmanager.TransactionManagerHibernate;
-import ru.otus.crm.dbmigrations.MigrationsExecutorFlyway;
-import ru.otus.crm.model.Address;
-import ru.otus.crm.model.Client;
-import ru.otus.crm.model.Phone;
-import ru.otus.crm.service.DbServiceClientImpl;
+import ru.otus.dao.ClientDao;
+import ru.otus.dao.ClientDaoImpl;
+import ru.otus.model.Address;
+import ru.otus.model.Client;
+import ru.otus.model.Phone;
 
 import java.util.Collections;
 
@@ -35,7 +36,7 @@ public class DbServiceDemo {
 ///
         var clientTemplate = new DataTemplateHibernate<>(Client.class);
 ///
-        var dbServiceClient = new DbServiceClientImpl(transactionManager, clientTemplate);
+        var dbServiceClient = new ClientDaoImpl(transactionManager, clientTemplate);
         dbServiceClient
                 .saveClient(new Client()
                         .setName("dbServiceFirst")

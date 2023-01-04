@@ -1,8 +1,8 @@
 package ru.otus.jdbc.mapper;
 
-import ru.otus.core.repository.DataTemplate;
-import ru.otus.core.repository.DataTemplateException;
-import ru.otus.core.repository.executor.DbExecutor;
+import ru.otus.core.hibernate.repository.DataTemplate;
+import ru.otus.core.hibernate.repository.DataTemplateException;
+import ru.otus.core.hibernate.repository.executor.DbExecutor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

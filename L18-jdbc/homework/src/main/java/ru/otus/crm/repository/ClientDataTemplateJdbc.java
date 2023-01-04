@@ -1,8 +1,8 @@
 package ru.otus.crm.repository;
 
-import ru.otus.core.repository.DataTemplate;
-import ru.otus.core.repository.DataTemplateException;
-import ru.otus.core.repository.executor.DbExecutor;
+import ru.otus.core.hibernate.repository.DataTemplate;
+import ru.otus.core.hibernate.repository.DataTemplateException;
+import ru.otus.core.hibernate.repository.executor.DbExecutor;
 import ru.otus.crm.model.Client;
 
 import java.sql.Connection;
