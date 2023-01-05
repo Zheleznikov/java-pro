@@ -1,0 +1,54 @@
+package ru.otus.hibernate.repository;
+
+import org.hibernate.Session;
+import org.hibernate.query.Query;
+
+import javax.persistence.EntityGraph;
+import java.util.List;
+import java.util.Optional;
+
+public class DataTemplateHibernate<T> implements DataTemplate<T> {
+
+    private final Class<T> clazz;
+
+    public DataTemplateHibernate(Class<T> clazz) {
+        this.clazz = clazz;
+    }
+
+    @Override
+    public Optional<T> findById(Session session, long id) {
+        return Optional.ofNullable(session.find(clazz, id));
+    }
+
+    @Override
+    public List<T> findByEntityField(Session session, String entityFieldName, Object entityFieldValue) {
+        var criteriaBuilder = session.getCriteriaBuilder();
+        var criteriaQuery = criteriaBuilder.createQuery(clazz);
+        var root = criteriaQuery.from(clazz);
+        criteriaQuery.select(root)
+                .where(criteriaBuilder.equal(root.get(entityFieldName), entityFieldValue));
+
+        var query = session.createQuery(criteriaQuery);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<T> findAll(Session session) {
+        EntityGraph<?> graph = session.createEntityGraph("address-and-phone-entity-graph");
+
+        Query<T> query = session.createQuery(String.format("from %s", clazz.getSimpleName()), clazz);
+        query.setHint("javax.persistence.fetchgraph", graph);
+
+        return query.getResultList();
+    }
+
+    @Override
+    public void insert(Session session, T object) {
+        session.persist(object);
+    }
+
+    @Override
+    public void update(Session session, T object) {
+        session.merge(object);
+    }
+}
