@@ -64,7 +64,7 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
                     try {
                         Object[] params = Arrays.stream(m.getParameterTypes())
                                 .map(c -> appComponents.stream()
-                                        .filter(component -> isClassAssignableFromAnother(c, component))
+                                        .filter(component -> c.isAssignableFrom(component.getClass()))
                                         .findFirst()
                                         .orElseThrow(() -> new IllegalArgumentException("Could not get non-existent component")))
                                 .toArray();
@@ -85,7 +85,7 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
     @Override
     public <C> C getAppComponent(Class<C> componentClass) {
         Stream<Object> classes = appComponents.stream()
-                .filter(c -> isClassAssignableFromAnother(componentClass, c));
+                .filter(c -> componentClass.isAssignableFrom(c.getClass()));
 
         if (classes.count() > 1) {
             throw new IllegalArgumentException("Could not define which component is taken");
