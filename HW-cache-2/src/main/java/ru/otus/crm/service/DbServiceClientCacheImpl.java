@@ -17,7 +17,7 @@ public class DbServiceClientCacheImpl implements DBServiceClient {
     private final DataTemplate<Client> clientDataTemplate;
     private final TransactionManager transactionManager;
     private final HwCache<String,Client> cache;
-    HwListener<String, Client> listener;
+    private final HwListener<String, Client> listener;
 
     public DbServiceClientCacheImpl(TransactionManager transactionManager, DataTemplate<Client> clientDataTemplate,
                                     HwCache<String, Client> cache, HwListener<String, Client> listener) {
@@ -52,27 +52,33 @@ public class DbServiceClientCacheImpl implements DBServiceClient {
 
     @Override
     public Optional<Client> getClient(long id) {
+        if (cache.get(String.valueOf(id)) != null) {
+            return Optional.of(cache.get(String.valueOf(id)));
+        }
+
         return transactionManager.doInReadOnlyTransaction(session -> {
-
-            if (cache.get(String.valueOf(id)) != null) {
-                return Optional.of(cache.get(String.valueOf(id)));
-            }
-
             var clientOptional = clientDataTemplate.findById(session, id);
             log.info("client: {}", clientOptional);
+
+            clientOptional.ifPresent(client -> cache.put(String.valueOf(id), client));
+
             return clientOptional;
         });
     }
 
     @Override
     public List<Client> findAll() {
-        return transactionManager.doInReadOnlyTransaction(session -> {
+        if (!cache.isEmpty()) {
+            return cache.getAll();
+        }
 
-            if (!cache.isEmptyOrOverfull()) {
-                return cache.getAll();
+        return transactionManager.doInReadOnlyTransaction(session -> {
+            var clientList = clientDataTemplate.findAll(session);
+
+            if (!clientList.isEmpty()) {
+                clientList.forEach(client -> cache.put(String.valueOf(client.getId()), client));
             }
 
-            var clientList = clientDataTemplate.findAll(session);
             log.info("clientList:{}", clientList);
             return clientList;
        });

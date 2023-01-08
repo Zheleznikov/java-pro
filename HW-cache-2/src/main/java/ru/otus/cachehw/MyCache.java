@@ -6,46 +6,38 @@ import java.util.*;
 public class MyCache<K, V> implements HwCache<K, V> {
 //Надо реализовать эти методы
 
-    HashMap<K,V> cache = new HashMap<>();
-    List<HwListener<K,V>> listeners = new ArrayList<>();
+    Map<K, V> cache = new WeakHashMap<>();
+    private final List<HwListener<K, V>> listeners = new ArrayList<>();
 
-    private int size = 10;
-
-    public MyCache() {
-    }
-
-    public MyCache(int size) {
-        this.size = size;
-    }
 
     @Override
     public void put(K key, V value) {
         cache.put(key, value);
-        listeners.forEach(listener -> listener.notify(key, value, "put entity in cache"));
+        invokeListener(key, value, "put entity in cache");
     }
 
     @Override
     public void remove(K key) {
         cache.remove(key);
-        listeners.forEach(listener -> listener.notify(key, "remove entity in cache"));
+        invokeListener(key, null, "remove entity in cache");
     }
 
     @Override
     public V get(K key) {
-        listeners.forEach(listener -> listener.notify(key, "get entity in cache"));
+        invokeListener(key, null, "get entity from cache");
         return cache.get(key);
     }
 
     @Override
     public List<V> getAll() {
-        listeners.forEach(listener -> listener.notify(null, "get all entity in cache"));
+        invokeListener(null, null, "get all entities from cache");
         return cache.values().stream().toList();
     }
 
     @Override
-    public boolean isEmptyOrOverfull() {
-        listeners.forEach(listener -> listener.notify(null, "check if cache is empty"));
-        return cache.isEmpty() || cache.size() > size;
+    public boolean isEmpty() {
+        invokeListener(null, null, "check if cache is empty");
+        return cache.isEmpty();
     }
 
     @Override
@@ -56,5 +48,17 @@ public class MyCache<K, V> implements HwCache<K, V> {
     @Override
     public void removeListener(HwListener<K, V> listener) {
         listeners.remove(listener);
+    }
+
+    private void invokeListener(K key, V value, String action) {
+
+        listeners.forEach(listener -> {
+            try {
+                listener.notify(key, value, action);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

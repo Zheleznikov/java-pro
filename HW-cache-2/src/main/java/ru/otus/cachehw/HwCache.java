@@ -13,7 +13,7 @@ public interface HwCache<K, V> {
 
     List<V> getAll();
 
-    boolean isEmptyOrOverfull();
+    boolean isEmpty();
 
     void addListener(HwListener<K, V> listener);
 
