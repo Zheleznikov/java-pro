@@ -11,10 +11,6 @@ public interface HwCache<K, V> {
 
     V get(K key);
 
-    List<V> getAll();
-
-    boolean isEmpty();
-
     void addListener(HwListener<K, V> listener);
 
     void removeListener(HwListener<K, V> listener);

@@ -16,7 +16,7 @@ public class DbServiceClientCacheImpl implements DBServiceClient {
 
     private final DataTemplate<Client> clientDataTemplate;
     private final TransactionManager transactionManager;
-    private final HwCache<String,Client> cache;
+    private final HwCache<String, Client> cache;
     private final HwListener<String, Client> listener;
 
     public DbServiceClientCacheImpl(TransactionManager transactionManager, DataTemplate<Client> clientDataTemplate,
@@ -68,19 +68,13 @@ public class DbServiceClientCacheImpl implements DBServiceClient {
 
     @Override
     public List<Client> findAll() {
-        if (!cache.isEmpty()) {
-            return cache.getAll();
-        }
-
         return transactionManager.doInReadOnlyTransaction(session -> {
             var clientList = clientDataTemplate.findAll(session);
-
-            if (!clientList.isEmpty()) {
-                clientList.forEach(client -> cache.put(String.valueOf(client.getId()), client));
-            }
-
             log.info("clientList:{}", clientList);
+
+            clientList.forEach(client -> cache.put(String.valueOf(client.getId()), client));
+
             return clientList;
-       });
+        });
     }
 }

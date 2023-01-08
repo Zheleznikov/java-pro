@@ -6,7 +6,7 @@ import java.util.*;
 public class MyCache<K, V> implements HwCache<K, V> {
 //Надо реализовать эти методы
 
-    Map<K, V> cache = new WeakHashMap<>();
+    private final Map<K, V> cache = new WeakHashMap<>();
     private final List<HwListener<K, V>> listeners = new ArrayList<>();
 
 
@@ -26,18 +26,6 @@ public class MyCache<K, V> implements HwCache<K, V> {
     public V get(K key) {
         invokeListener(key, null, "get entity from cache");
         return cache.get(key);
-    }
-
-    @Override
-    public List<V> getAll() {
-        invokeListener(null, null, "get all entities from cache");
-        return cache.values().stream().toList();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        invokeListener(null, null, "check if cache is empty");
-        return cache.isEmpty();
     }
 
     @Override
