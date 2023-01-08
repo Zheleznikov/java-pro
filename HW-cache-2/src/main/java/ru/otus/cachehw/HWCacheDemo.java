@@ -21,10 +21,7 @@ public class HWCacheDemo {
                 logger.info("key:{}, value:{}, action: {}", key, value, action);
             }
 
-            @Override
-            public void notify(String key, String action) {
 
-            }
         };
 
         cache.addListener(listener);
